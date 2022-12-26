@@ -3,6 +3,8 @@ import users from './users';
 import dotenv from 'dotenv';
 import movieModel from '../api/movies/movieModel';
 import movies from './movies.js';
+import genreModel from '../api/genres/genreModel';
+import genres from './genres';
 
 dotenv.config();
 
@@ -31,9 +33,21 @@ export async function loadMovies() {
   }
 }
 
+export async function loadGenres() {
+  console.log('load seed data');
+  console.log(genres.length);
+  try {
+    await genreModel.deleteMany();
+    await genreModel.collection.insertMany(genres);
+    console.info(`${genres.length} Genres were successfully stored.`);
+  } catch (err) {
+    console.error(`failed to Load Genre Data: ${err}`);
+  }
+}
+
 if (process.env.SEED_DB) {
   loadUsers();
   loadMovies();
-  //loadGenres();//you may not need this line if you skipped the exercises
+  loadGenres();//you may not need this line if you skipped the exercises
   
 }
