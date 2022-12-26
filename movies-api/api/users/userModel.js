@@ -16,16 +16,6 @@ UserSchema.statics.findByUserName = function (username) {
 };
 
 
-UserSchema.methods.comparePassword = function (passw, callback) {
-  bcrypt.compare(passw, this.password, (err, isMatch) => {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, isMatch);
-  });
-};
-
-
 UserSchema.pre('save', function(next) {
   const user = this;
   if (this.isModified('password') || this.isNew) {
@@ -45,5 +35,14 @@ UserSchema.pre('save', function(next) {
       return next();
   }
 });
+
+UserSchema.methods.comparePassword = function (passw, callback) {
+  bcrypt.compare(passw, this.password, (err, isMatch) => {
+    if (err) {
+      return callback(err);
+    }
+    callback(null, isMatch);
+  });
+};
 
 export default mongoose.model('User', UserSchema);
